@@ -1,18 +1,26 @@
 package amhamogus.com.latsoclient;
 
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import amhamogus.com.latsoclient.activities.Product;
+import amhamogus.com.latsoclient.adapters.LatsoPageAdapter;
 import amhamogus.com.latsoclient.fragments.ProductDetailFragment;
 import amhamogus.com.latsoclient.fragments.ScanProductFragment;
 
@@ -21,75 +29,91 @@ import amhamogus.com.latsoclient.fragments.ScanProductFragment;
  *
  * @author Amha Mogus (amha.mogus@gmail.com)
  */
-public class MainActivity extends Activity
-        implements ProductDetailFragment.OnFragmentInteractionListener,
-        ScanProductFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity
+        implements ScanProductFragment.OnFragmentInteractionListener {
 
     NfcAdapter mNfcAdapter;
-
     // Data received from NFC
     private String mPayload;
-
     // Message for Social Share
     protected String share_text = "";
-
     // Represents the details of a product.
     ProductDetailFragment productDetailFragment;
-
     // Screen that allows the user to tap/scan a product.
-    // TODO: Need to redo theinteraction model.
+    // TODO: Need to redo the interaction model.
     ScanProductFragment scanProductFragment;
+
+    LatsoPageAdapter pageAdapter;
+    PendingIntent pendingIntent;
+    IntentFilter[] intentFiltersArray;
+    String[][] techListsArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_new);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Get NFC System Adapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        // If a user has tapped a
-        Intent mIntent = getIntent();
-        Bundle mBundle = mIntent.getExtras();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            Log.d("AMHA-OUT", "Extras = " + extras.toString());
 
-        Parcelable[] rawMsgs = mIntent
-                .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-        if (rawMsgs != null) {
-            NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
-            for (int i = 0; i < rawMsgs.length; i++) {
-                msgs[i] = (NdefMessage) rawMsgs[i];
+            Parcelable[] rawMsgs = getIntent()
+                    .getParcelableArrayExtra(mNfcAdapter.EXTRA_NDEF_MESSAGES);
+
+            if (rawMsgs != null) {
+                NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
+                for (int i = 0; i < rawMsgs.length; i++) {
+                    msgs[i] = (NdefMessage) rawMsgs[i];
+                    Log.d("AMHA-OUT", "msg [i] = " + msgs[i].toString());
+                }
+                NdefRecord[] records = msgs[0].getRecords();
+                mPayload = new String(records[0].getPayload());
+
+                Log.d("AMHA-OUT", "payload = " + mPayload);
             }
-            NdefRecord[] records = msgs[0].getRecords();
-            mPayload = new String(records[0].getPayload());
-            // Pass data to Fragment
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(
-                    R.id.fragmentLayout,
-                    productDetailFragment.newInstance(mPayload));
-            transaction.commit();
-
-        } else {
-            // App was launched by user, so we prompt them to
-            // interact (e.g. bump/scan/tap) with a product.
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(
-                    R.id.fragmentLayout,
-                    scanProductFragment.newInstance());
-            transaction.commit();
-
         }
+
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pageAdapter = new LatsoPageAdapter(getSupportFragmentManager());
+        pager.setAdapter(pageAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(pager);
+
+        pendingIntent = PendingIntent.getActivity(
+                this, 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
+        IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        try {
+            ndef.addDataType("*/*");
+        } catch (IntentFilter.MalformedMimeTypeException e) {
+            throw new RuntimeException("fail", e);
+        }
+        intentFiltersArray = new IntentFilter[]{ndef,};
+        techListsArray = new String[][]{new String[]{NfcF.class.getName()}};
+
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
-        PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(this, intent, null, null);
+        mNfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFiltersArray, techListsArray);
+//        PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+//        NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(this, intent, null, null);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        //mNfcAdapter.disableForegroundDispatch(this);
         if (NfcAdapter.getDefaultAdapter(this) != null)
             NfcAdapter.getDefaultAdapter(this).disableForegroundDispatch(this);
     }
@@ -120,6 +144,14 @@ public class MainActivity extends Activity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onNewIntent(Intent intent) {
+        Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        Log.d("AMHA-OUT", tagFromIntent.toString());
+
+        Intent newintent = new Intent(getApplicationContext(), Product.class);
+        startActivity(newintent);
     }
 
     public void onFragmentInteraction(Uri uri) {

@@ -1,16 +1,17 @@
 package amhamogus.com.latsoclient.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,7 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import amhamogus.com.latsoclient.MainActivity;
 import amhamogus.com.latsoclient.R;
 import amhamogus.com.latsoclient.net.YaaSService;
 
@@ -40,12 +40,11 @@ public class ProductDetailFragment extends Fragment {
     private TextView productDescription;
     private ImageView productImage;
     private TextView productCondition;
+    private ScrollView scrollView;
+    private ProgressBar progressBar;
 
     // Product ID that is passed into this fragment.
     private String mParam1;
-
-    // TODO
-    private OnFragmentInteractionListener mListener;
 
     // View that will be updated when a product history
     // has been returned from the Lotso product repository.
@@ -98,52 +97,39 @@ public class ProductDetailFragment extends Fragment {
         productCondition = (TextView) fragmentLayout.findViewById(R.id.product_condition);
         mHistoryCard = (LinearLayout) fragmentLayout.findViewById(R.id.card_list);
 
+        scrollView=  (ScrollView) fragmentLayout.findViewById(R.id.scrollView);
+        scrollView.setVisibility(View.INVISIBLE);
+
+        progressBar = (ProgressBar)fragmentLayout.findViewById(R.id.progress);
         // Send request data request in the backgound.
         new ProductWorker().execute(mParam1);
         return fragmentLayout;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
+
 
     private class ProductWorker extends AsyncTask<String, String, JSONObject> {
 
         protected JSONObject doInBackground(String... strings) {
             YaaSService service = new YaaSService();
-            JSONObject returnedObject = service.getProduct(strings[0]);
-            return returnedObject;
+            return service.getProduct(strings[0]);
         }
 
         @Override
         protected void onPostExecute(JSONObject object) {
-
-            Log.d("LOTSO", "JSON = " + object.toString());
 
             try {
                 // Extract Product data from JSON Objects from the server response.
@@ -153,6 +139,9 @@ public class ProductDetailFragment extends Fragment {
                 // Get product history and verification.
                 JSONObject productInstance = object.getJSONObject("instance");
                 JSONArray instanceHistory = productInstance.getJSONArray("history");
+
+                progressBar.setVisibility(View.INVISIBLE);
+                scrollView.setVisibility(View.VISIBLE);
 
                 // For each date, create a text view and insert into UI.
                 TextView myTextView;
@@ -175,10 +164,12 @@ public class ProductDetailFragment extends Fragment {
                 // Populate product condition.
                 productCondition.setText(productInstance.getString("condition"));
 
-                // Save product info for social share.
-                ((MainActivity) getActivity()).setShare("Hey, I just got "
-                        + productInfo.getString("name")
-                        + "" + " from #lotso. #hybris #yaashackathon #isobar #nyc");
+//                // Save product info for social share.
+//                ((MainActivity) getActivity()).setShare("Hey, I just got "
+//                        + productInfo.getString("name")
+//                        + "" + " from #lotso. #hybris #yaashackathon #isobar #nyc");
+
+
 
             } catch (JSONException e) {
                 //TODO:

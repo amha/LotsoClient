@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="amhamogus.com.latsoclient.fragments.ScanProductFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -11,25 +11,26 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/textView"
+            style="@style/jumbo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/blank_title"
-            android:layout_marginTop="301dp"
-            android:id="@+id/textView"
-            android:gravity="center"
-            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            style="@style/jumbo"/>
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="301dp"
+            android:gravity="center"
+            android:text="@string/blank_title" />
 
         <ImageView
+            android:id="@+id/search_product_image"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:src="@drawable/search"
-            android:id="@+id/search_product_image"
-            android:layout_gravity="center_horizontal|top"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="48dp" />
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="48dp"
+            android:src="@drawable/nfc_scan_cta" />
+
 
     </RelativeLayout>
 

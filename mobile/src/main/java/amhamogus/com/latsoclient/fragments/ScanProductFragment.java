@@ -3,7 +3,7 @@ package amhamogus.com.latsoclient.fragments;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,9 @@ import amhamogus.com.latsoclient.R;
  */
 public class ScanProductFragment extends Fragment {
 
+    private String title = "TEMP TITLE";
+    private int page = 0;
+
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -27,8 +30,7 @@ public class ScanProductFragment extends Fragment {
      * @return A new instance of fragment ScanProductFragment.
      */
     public static ScanProductFragment newInstance() {
-        ScanProductFragment fragment = new ScanProductFragment();
-        return fragment;
+        return new ScanProductFragment();
     }
 
     public ScanProductFragment() {

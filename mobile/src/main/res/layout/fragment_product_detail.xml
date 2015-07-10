@@ -3,126 +3,127 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="amhamogus.com.latsoclient.fragments.ProductDetailFragment">
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <RelativeLayout
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress"
+        android:layout_gravity="center" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_view_image"
-            android:layout_gravity="center"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="20dp"
-            card_view:cardCornerRadius="4dp">
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/damn_image"
-            android:layout_width="match_parent"
-            android:scaleType="centerCrop"
-            android:layout_height="200dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_view"
-            android:layout_gravity="center"
-            android:layout_below="@+id/card_view_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_marginBottom="10dp"
-            card_view:cardCornerRadius="4dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:orientation="vertical"
-            android:paddingLeft="20dp"
-            android:paddingTop="20dp">
+            <ImageView
+                android:id="@+id/damn_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerCrop" />
 
 
-            <TextView
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/productHeader"
-                android:text="@string/header_product_name" />
+                android:layout_below="@+id/damn_image"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                card_view:cardCornerRadius="4dp">
 
-            <TextView
-                android:id="@+id/product_title"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:orientation="vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="20dp">
+
+
+                    <TextView
+                        style="@style/productHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/header_product_name" />
+
+                    <TextView
+                        android:id="@+id/product_title"
+                        style="@style/productInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="@string/hello_world" />
+
+                    <TextView
+                        style="@style/productHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/header_product_desc" />
+
+                    <TextView
+                        android:id="@+id/product_description"
+                        style="@style/productInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="@string/hello_world" />
+
+                    <TextView
+                        style="@style/productHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/header_product_condition" />
+
+                    <TextView
+                        android:id="@+id/product_condition"
+                        style="@style/productInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hello_blank_fragment" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_view_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                style="@style/productInfo"
-                android:text="@string/hello_world" />
+                android:layout_below="@+id/card_view"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                card_view:cardCornerRadius="4dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/productHeader"
-                android:text="@string/header_product_desc" />
+                <TextView
+                    style="@style/productHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
 
-            <TextView
-                android:id="@+id/product_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                style="@style/productInfo"
-                android:text="@string/hello_world" />
+                    android:paddingTop="15dp"
+                    android:text="@string/product_history" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/productHeader"
-                android:text="@string/header_product_condition" />
-            <TextView
-                android:id="@+id/product_condition"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/productInfo"
-                android:text="@string/hello_blank_fragment"/>
+                <LinearLayout
+                    android:id="@+id/card_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
 
-        </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_view_history"
-            android:layout_gravity="center"
-            android:layout_below="@+id/card_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            card_view:cardCornerRadius="4dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingTop="15dp"
-
-                style="@style/productHeader"
-                android:text="@string/product_history" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:orientation="vertical"
-
-                android:paddingLeft="20dp"
-                android:id="@+id/card_list"
-                android:paddingTop="38dp"
-                android:paddingBottom="10dp">
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="38dp">
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
-    </RelativeLayout>
-</ScrollView>
+        </RelativeLayout>
+    </ScrollView>
 </FrameLayout>

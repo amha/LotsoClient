@@ -2,4 +2,5 @@
 <resources>
     <color name="isobar_red">#F44336</color>
     <color name="isobar_dard_red">#B71C1C</color>
+    <color name="accent_color">#2196F3</color>
 </resources>
