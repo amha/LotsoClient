@@ -18,9 +18,6 @@ import amhamogus.com.latsoclient.R;
  */
 public class ScanProductFragment extends Fragment {
 
-    private String title = "TEMP TITLE";
-    private int page = 0;
-
     private OnFragmentInteractionListener mListener;
 
     /**

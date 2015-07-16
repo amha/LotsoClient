@@ -1,8 +1,8 @@
 package amhamogus.com.latsoclient.activities;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +18,9 @@ public class Product extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
-        productDetailFragment = ProductDetailFragment.newInstance("0001");
+        String productID = getIntent().getExtras().getString("ID");
+        productDetailFragment =
+                ProductDetailFragment.newInstance(productID.substring(3,productID.length()));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_product);
         setSupportActionBar(toolbar);

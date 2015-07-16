@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
 import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -76,6 +75,13 @@ public class MainActivity extends AppCompatActivity
                 mPayload = new String(records[0].getPayload());
 
                 Log.d("AMHA-OUT", "payload = " + mPayload);
+
+                Intent newintent = new Intent(getApplicationContext(), Product.class);
+
+                Bundle args = new Bundle();
+                args.putString("ID", mPayload);
+                newintent.putExtras(args);
+                startActivity(newintent);
             }
         }
 
@@ -98,22 +104,21 @@ public class MainActivity extends AppCompatActivity
         }
         intentFiltersArray = new IntentFilter[]{ndef,};
         techListsArray = new String[][]{new String[]{NfcF.class.getName()}};
-
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        mNfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFiltersArray, techListsArray);
-//        PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-//        NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(this, intent, null, null);
+        mNfcAdapter.enableForegroundDispatch(this,
+                pendingIntent,
+                intentFiltersArray,
+                techListsArray);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //mNfcAdapter.disableForegroundDispatch(this);
         if (NfcAdapter.getDefaultAdapter(this) != null)
             NfcAdapter.getDefaultAdapter(this).disableForegroundDispatch(this);
     }
@@ -142,16 +147,33 @@ public class MainActivity extends AppCompatActivity
             startActivity(sendIntent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     public void onNewIntent(Intent intent) {
-        Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        Log.d("AMHA-OUT", tagFromIntent.toString());
+        String payload = "";
 
-        Intent newintent = new Intent(getApplicationContext(), Product.class);
-        startActivity(newintent);
+        Parcelable[] rawMsgs = intent
+                .getParcelableArrayExtra(mNfcAdapter.EXTRA_NDEF_MESSAGES);
+
+        if (rawMsgs != null) {
+            NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
+            for (int i = 0; i < rawMsgs.length; i++) {
+                msgs[i] = (NdefMessage) rawMsgs[i];
+            }
+            NdefRecord[] records = msgs[0].getRecords();
+            payload = new String(records[0].getPayload());
+
+            Bundle args = new Bundle();
+            args.putString("ID", payload);
+
+            Intent newintent = new Intent(getApplicationContext(), Product.class);
+            newintent.putExtras(args);
+            startActivity(newintent);
+
+        } else {
+            Log.d("AMHA-OUT", "Intent is empty");
+        }
     }
 
     public void onFragmentInteraction(Uri uri) {

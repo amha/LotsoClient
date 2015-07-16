@@ -30,11 +30,9 @@ import amhamogus.com.latsoclient.net.YaaSService;
  */
 public class ProductDetailFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
 
-    // Product object and assicated data.
+    // Product object and associated data.
     private JSONObject productInformation;
     private TextView productTitle;
     private TextView productDescription;
@@ -53,19 +51,15 @@ public class ProductDetailFragment extends Fragment {
     /**
      * Create an instance of a Lotso product.
      *
-     * @param productID Parameter 1.
+     * @param productID Product ID to send to YaaS.
      * @return A new instance of fragment ProductDetailFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ProductDetailFragment newInstance(String productID) {
-
-        // Extract product code (a 4 digit number for demo purposes)
-        String code = productID.substring(productID.length() - 4, productID.length());
 
         // Pass product code as a parameter.
         ProductDetailFragment fragment = new ProductDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, code);
+        args.putString(ARG_PARAM1, productID);
         fragment.setArguments(args);
 
         return fragment;
@@ -97,16 +91,14 @@ public class ProductDetailFragment extends Fragment {
         productCondition = (TextView) fragmentLayout.findViewById(R.id.product_condition);
         mHistoryCard = (LinearLayout) fragmentLayout.findViewById(R.id.card_list);
 
-        scrollView=  (ScrollView) fragmentLayout.findViewById(R.id.scrollView);
+        scrollView = (ScrollView) fragmentLayout.findViewById(R.id.scrollView);
         scrollView.setVisibility(View.INVISIBLE);
+        progressBar = (ProgressBar) fragmentLayout.findViewById(R.id.progress);
 
-        progressBar = (ProgressBar)fragmentLayout.findViewById(R.id.progress);
         // Send request data request in the backgound.
         new ProductWorker().execute(mParam1);
         return fragmentLayout;
     }
-
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -118,8 +110,6 @@ public class ProductDetailFragment extends Fragment {
         super.onDetach();
 
     }
-
-
 
     private class ProductWorker extends AsyncTask<String, String, JSONObject> {
 
@@ -168,7 +158,6 @@ public class ProductDetailFragment extends Fragment {
 //                ((MainActivity) getActivity()).setShare("Hey, I just got "
 //                        + productInfo.getString("name")
 //                        + "" + " from #lotso. #hybris #yaashackathon #isobar #nyc");
-
 
 
             } catch (JSONException e) {
