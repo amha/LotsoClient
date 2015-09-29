@@ -21,8 +21,10 @@ import java.io.IOException;
 public class YaaSService {
 
     // Url to YaaS powered Product API
-    private String productEndpoint = "https://lotso-nfc.cf3.hybris.com/productInstances/";
+    //private String productEndpoint = "https://lotso-nfc.cf3.hybris.com/productInstances/";
 
+    // New endpoint as pf 09/28/2015
+    private String productEndpoint = "http://lotso.cfapps.io/productInstances/";
     // A product from the Latso Store front stored in YaaS.
     JSONObject product;
 

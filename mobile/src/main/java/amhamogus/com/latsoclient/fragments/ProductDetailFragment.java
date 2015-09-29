@@ -30,7 +30,11 @@ import amhamogus.com.latsoclient.net.YaaSService;
  */
 public class ProductDetailFragment extends Fragment {
 
+    private String TAG = "LOCAL-LOTSO";
     private static final String ARG_PARAM1 = "param1";
+
+    private String[] product1 = {"Coach Classic Leather Penny Shoulder Purse", "Coach Classic Leather Shoulder Purse 17994. Display Bag ~ New This genuine Coach Shoulder Bag shows only the slightest hint of handling with a couple of extremely faint surface marks but nothing obvious or significant (see close-up photos). Leather remains firm and intact with no shelf wear. Hardware remains bright and shiny. Interior is in new condition with no issues. Note that the bag was missing the shoulder strap which has been replaced with a genuine leather (generic) shoulder strap which is not removable. Comes with original Coach care card.", "Used"};
+    private String[] product2 = {"Marc Jacobs: New Nudes Sheer Lip Gel", "Sheer, chic and habit-forming, this covetable lip collection breaks the mold of traditional nude lipstick with its innovative gellified formula that glides effortlessly over lips, laying down subtle shades with a sleek shine finish. Velvet-like Monoi butter, derived from the tropical Tiaré flower, delivers supreme moisture while nourishing myrrh extract and antioxidant vitamin e reduce signs of aging, including vertical fine lines.", "New"};
 
     // Product object and associated data.
     private JSONObject productInformation;
@@ -60,6 +64,7 @@ public class ProductDetailFragment extends Fragment {
         ProductDetailFragment fragment = new ProductDetailFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, productID);
+//        Log.d(TAG, "PRODUCT ID = "+ productID);
         fragment.setArguments(args);
 
         return fragment;
@@ -87,14 +92,26 @@ public class ProductDetailFragment extends Fragment {
         // Retrieve UI elements that will be updated onPostExecute.
         productTitle = (TextView) fragmentLayout.findViewById(R.id.product_title);
         productDescription = (TextView) fragmentLayout.findViewById(R.id.product_description);
+        productDescription.setLineSpacing(2, 1.3f);
         productImage = (ImageView) fragmentLayout.findViewById(R.id.damn_image);
         productCondition = (TextView) fragmentLayout.findViewById(R.id.product_condition);
-        mHistoryCard = (LinearLayout) fragmentLayout.findViewById(R.id.card_list);
+        //mHistoryCard = (LinearLayout) fragmentLayout.findViewById(R.id.card_list);
 
         scrollView = (ScrollView) fragmentLayout.findViewById(R.id.scrollView);
-        scrollView.setVisibility(View.INVISIBLE);
-        progressBar = (ProgressBar) fragmentLayout.findViewById(R.id.progress);
-
+//
+//        if(mParam1 == "en001"){
+//            productTitle.setText(product1[0]);
+//            productDescription.setText(product1[1]);
+//            productCondition.setText(product1[2]);
+//            productImage.setImageResource(R.drawable.product_bag);
+//        }
+//        else{
+//            productTitle.setText(product2[0]);
+//            productDescription.setText(product2[1]);
+//            productCondition.setText(product2[2]);
+//            productImage.setImageResource(R.drawable.product_lip_stick);
+//        }
+        //Removing call to YaaS for the local version of the app.
         // Send request data request in the backgound.
         new ProductWorker().execute(mParam1);
         return fragmentLayout;
@@ -128,9 +145,10 @@ public class ProductDetailFragment extends Fragment {
 
                 // Get product history and verification.
                 JSONObject productInstance = object.getJSONObject("instance");
+                Log.d("OUTPUT", productInstance.toString());
                 JSONArray instanceHistory = productInstance.getJSONArray("history");
 
-                progressBar.setVisibility(View.INVISIBLE);
+//                progressBar.setVisibility(View.INVISIBLE);
                 scrollView.setVisibility(View.VISIBLE);
 
                 // For each date, create a text view and insert into UI.
@@ -139,7 +157,7 @@ public class ProductDetailFragment extends Fragment {
                     myTextView = new TextView(getActivity());
                     myTextView.setText(instanceHistory.getJSONObject(i).getString("date"));
                     myTextView.setTextAppearance(getActivity(), R.style.productDate);
-                    mHistoryCard.addView(myTextView);
+                    //mHistoryCard.addView(myTextView);
                 }
 
                 // Populate product title.
@@ -168,6 +186,7 @@ public class ProductDetailFragment extends Fragment {
     }
 
     public void loadImage(String url) {
+        Log.d("URLTEST", url);
         Glide.with(getActivity().getApplicationContext())
                 .load(url)
                 .into(productImage);
