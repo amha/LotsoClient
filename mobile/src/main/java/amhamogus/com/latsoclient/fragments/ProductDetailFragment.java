@@ -92,7 +92,7 @@ public class ProductDetailFragment extends Fragment {
         // Retrieve UI elements that will be updated onPostExecute.
         productTitle = (TextView) fragmentLayout.findViewById(R.id.product_title);
         productDescription = (TextView) fragmentLayout.findViewById(R.id.product_description);
-        productDescription.setLineSpacing(2, 1.3f);
+        productDescription.setLineSpacing(2, 1.1f);
         productImage = (ImageView) fragmentLayout.findViewById(R.id.damn_image);
         productCondition = (TextView) fragmentLayout.findViewById(R.id.product_condition);
         //mHistoryCard = (LinearLayout) fragmentLayout.findViewById(R.id.card_list);
